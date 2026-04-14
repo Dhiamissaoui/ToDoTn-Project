@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>ToDoTn — Inscription</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f6f9fc 0%, #edf2f7 100%);
+      font-family: 'Instrument Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    /* subtle animated mesh */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(200,240,96,0.06) 0%, rgba(139,92,246,0.02) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* main card container */
+    .signup-container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+      background: #ffffff;
+      border-radius: 2rem;
+      box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* LEFT PANEL — Brand & identity (ToDoTn style) */
+    .brand-panel {
+      flex: 1.2;
+      background: #ffffff;
+      padding: 2.8rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      margin-bottom: 2.5rem;
+    }
+    .logo-main {
+      font-family: 'Syne', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: #0f172a;
+    }
+    .logo-accent {
+      font-family: 'Syne', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c8f060, #a0e05a);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .brand-headline h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      font-family: 'Syne', sans-serif;
+      color: #0f172a;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .brand-headline p {
+      font-size: 1rem;
+      color: #475569;
+      line-height: 1.5;
+      max-width: 90%;
+      margin-bottom: 2rem;
+    }
+
+    .feature-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .feature-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #1e293b;
+      font-weight: 500;
+    }
+    .feature-badge {
+      width: 28px;
+      height: 28px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #c8f060;
+      background: #1e293b;
+    }
+
+    .testimonial {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #edf2f7;
+    }
+    .testimonial-text {
+      font-size: 0.85rem;
+      color: #334155;
+      font-style: italic;
+      line-height: 1.4;
+    }
+    .testimonial-author {
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    /* RIGHT PANEL — Sign Up Form */
+    .form-panel {
+      flex: 1;
+      background: #ffffff;
+      padding: 2.8rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-header {
+      margin-bottom: 1.8rem;
+    }
+    .form-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.4rem;
+    }
+    .form-header p {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.3rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-group label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #5b6e8c;
+    }
+    .input-field {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+      font-family: 'Instrument Sans', sans-serif;
+      background: #fafcff;
+      border: 1px solid #e2edf2;
+      border-radius: 18px;
+      transition: all 0.2s;
+      outline: none;
+      color: #0f172a;
+    }
+    .input-field:focus {
+      border-color: #c8f060;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(200,240,96,0.15);
+    }
+
+    .row-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.2rem;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #334155;
+      cursor: pointer;
+    }
+    .terms-link {
+      color: #0f172a;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid #c8f060;
+    }
+    .terms-link:hover {
+      color: #c8f060;
+    }
+
+    /* Sign Up Button as Link to index.html */
+    .submit-btn {
+      display: inline-block;
+      text-align: center;
+      background: #0f172a;
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.9rem 0;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      width: 100%;
+    }
+    .submit-btn:hover {
+      background: #1e293b;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0.8rem 0 0.6rem;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: #eef2ff;
+    }
+    .divider-text {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .social-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 40px;
+      padding: 0.7rem 0;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #334155;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .social-btn:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+    }
+
+    .signin-prompt {
+      text-align: center;
+      margin-top: 1.8rem;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+    .signin-link {
+      color: #0f172a;
+      font-weight: 700;
+      text-decoration: none;
+      margin-left: 4px;
+      cursor: pointer;
+      background: #c8f060;
+      padding: 4px 12px;
+      border-radius: 30px;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .signin-link:hover {
+      background: #b0e040;
+      transform: translateY(-1px);
+    }
+
+    /* responsive */
+    @media (max-width: 880px) {
+      .signup-container {
+        flex-direction: column;
+        max-width: 520px;
+      }
+      .brand-panel {
+        border-right: none;
+        border-bottom: 1px solid #ecf3f9;
+        padding: 2rem;
+      }
+      .brand-headline p {
+        max-width: 100%;
+      }
+      .form-panel {
+        padding: 2rem;
+      }
+      .brand-headline h1 {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-headline h1 {
+        font-size: 1.7rem;
+      }
+      .input-field {
+        padding: 0.75rem 0.9rem;
+      }
+      .social-btn {
+        font-size: 0.7rem;
+      }
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .signup-form {
+      animation: fadeSlideUp 0.3s ease-out;
+    }
+  </style>
+</head>
+<body>
+<div class="signup-container">
+  <!-- PARTIE GAUCHE : Marque ToDoTn -->
+  <div class="brand-panel">
+    <div>
+      <div class="logo-area">
+        <span class="logo-main">ToDo</span><span class="logo-accent">Tn</span>
+      </div>
+      <div class="brand-headline">
+        <h1>Rejoignez le mouvement.</h1>
+        <p>Démarrez votre aventure agile — suivez les sprints, la vélocité et la progression de votre équipe en toute clarté.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-row">
+          <div class="feature-badge">⚡</div>
+          <span>Tableau Scrum en temps réel</span>
+        </div>
+        <div class="feature-row">
+          <div class="feature-badge">📊</div>
+          <span>Points de story & insights de vélocité</span>
+        </div>
+        <div class="feature-row">
+          <div class="feature-badge">🎯</div>
+          <span>Glisser-déposer + planification de sprint</span>
+        </div>
+        <div class="feature-row">
+          <div class="feature-badge">🔒</div>
+          <span>Sécurité de niveau entreprise</span>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">“ToDoTn a changé notre façon de livrer. Propre, intuitif et ultra-rapide.”</div>
+        <div class="testimonial-author">— Sarah Chen, Responsable Produit</div>
+      </div>
+    </div>
+    <div style="font-size: 0.7rem; color:#94a3b8; margin-top: 2rem;">
+      © 2025 ToDoTn — Agile redéfini
+    </div>
+  </div>
+
+  <!-- PARTIE DROITE : FORMULAIRE D'INSCRIPTION -->
+  <div class="form-panel">
+    <div class="form-header">
+      <h2>Créer un compte</h2>
+      <p>Commencez avec ToDoTn en quelques secondes.</p>
+    </div>
+
+    <form class="signup-form" id="signupForm" action="index.html" method="GET">
+      <div class="input-group">
+        <label>Nom complet</label>
+        <input type="text" class="input-field" id="fullnameInput" name="fullname" placeholder="Alex Morgan" autocomplete="name" required>
+      </div>
+      <div class="input-group">
+        <label>Adresse email</label>
+        <input type="email" class="input-field" id="emailInput" name="email" placeholder="bonjour@todotn.com" autocomplete="email" required>
+      </div>
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <input type="password" class="input-field" id="passwordInput" name="password" placeholder="Créez un mot de passe fort" autocomplete="new-password" required>
+      </div>
+      <div class="input-group">
+        <label>Confirmer le mot de passe</label>
+        <input type="password" class="input-field" id="confirmInput" name="confirm_password" placeholder="Confirmez votre mot de passe" autocomplete="off" required>
+      </div>
+      <div class="row-flex">
+        <label class="checkbox-label">
+          <input type="checkbox" id="termsCheckbox"> <span>J'accepte les <a href="#" class="terms-link" id="termsLink">Conditions</a> et la <a href="#" class="terms-link" id="privacyLink">Politique de confidentialité</a></span>
+        </label>
+      </div>
+      <!-- BOUTON D'INSCRIPTION VERS INDEX.HTML -->
+      <button type="submit" class="submit-btn" id="signupButton">Créer mon compte →</button>
+      
+      <div class="divider">
+        <div class="divider-line"></div>
+        <span class="divider-text">ou s'inscrire avec</span>
+        <div class="divider-line"></div>
+      </div>
+      
+      <div class="social-btns">
+        <button type="button" class="social-btn" id="googleSignupBtn">
+          <span>G</span> Google
+        </button>
+        <button type="button" class="social-btn" id="githubSignupBtn">
+          <span>GH</span> GitHub
+        </button>
+      </div>
+      
+      <div class="signin-prompt">
+        Vous avez déjà un compte ?<span class="signin-link" id="signinRedirectBtn">Se connecter</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // Éléments DOM
+    const fullnameField = document.getElementById('fullnameInput');
+    const emailField = document.getElementById('emailInput');
+    const passwordField = document.getElementById('passwordInput');
+    const confirmField = document.getElementById('confirmInput');
+    const termsCheckbox = document.getElementById('termsCheckbox');
+    const signupForm = document.getElementById('signupForm');
+    const googleBtn = document.getElementById('googleSignupBtn');
+    const githubBtn = document.getElementById('githubSignupBtn');
+    const signinRedirect = document.getElementById('signinRedirectBtn');
+    const termsLink = document.getElementById('termsLink');
+    const privacyLink = document.getElementById('privacyLink');
+
+    // Validation basique d'email
+    function isValidEmail(email) {
+      const re = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+      return re.test(email.trim());
+    }
+
+    // Message toast élégant (style ToDoTn)
+    function showMessage(message, isError = false) {
+      const existingToast = document.querySelector('.todotn-toast');
+      if (existingToast) existingToast.remove();
+      
+      const toast = document.createElement('div');
+      toast.className = 'todotn-toast';
+      toast.textContent = message;
+      toast.style.position = 'fixed';
+      toast.style.bottom = '24px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.backgroundColor = isError ? '#fef2f2' : '#f0fdf4';
+      toast.style.color = isError ? '#b91c1c' : '#065f46';
+      toast.style.border = `1px solid ${isError ? '#fecaca' : '#c8f060'}`;
+      toast.style.padding = '12px 28px';
+      toast.style.borderRadius = '60px';
+      toast.style.fontSize = '0.85rem';
+      toast.style.fontWeight = '500';
+      toast.style.fontFamily = "'Instrument Sans', sans-serif";
+      toast.style.boxShadow = '0 10px 25px -5px rgba(0,0,0,0.1)';
+      toast.style.backdropFilter = 'blur(4px)';
+      toast.style.background = isError ? '#fff5f5' : '#fefce8';
+      toast.style.zIndex = '1000';
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.25s';
+        setTimeout(() => toast.remove(), 300);
+      }, 2800);
+    }
+
+    // Stocker les données utilisateur dans localStorage (démo)
+    function storeUserData(email, fullname) {
+      const users = JSON.parse(localStorage.getItem('todotn_users') || '[]');
+      // Vérifier si l'email existe déjà
+      const exists = users.some(u => u.email === email);
+      if (!exists) {
+        users.push({ email, fullname, createdAt: new Date().toISOString() });
+        localStorage.setItem('todotn_users', JSON.stringify(users));
+      }
+      // Stocker la session courante
+      localStorage.setItem('todotn_current_user', email);
+      localStorage.setItem('todotn_user_name', fullname);
+      // Supprimer l'ancien flag remember si nécessaire
+      localStorage.removeItem('todotn_remember');
+    }
+
+    // Validation du formulaire avant soumission vers index.html
+    function validateAndSubmit(event) {
+      const fullname = fullnameField.value.trim();
+      const email = emailField.value.trim();
+      const password = passwordField.value;
+      const confirm = confirmField.value;
+      
+      if (!fullname) {
+        event.preventDefault();
+        showMessage('✧ Veuillez saisir votre nom complet.', true);
+        fullnameField.focus();
+        return false;
+      }
+      if (fullname.length < 2) {
+        event.preventDefault();
+        showMessage('✧ Veuillez saisir un nom complet valide.', true);
+        fullnameField.focus();
+        return false;
+      }
+      if (!email) {
+        event.preventDefault();
+        showMessage('✧ Veuillez saisir votre adresse email.', true);
+        emailField.focus();
+        return false;
+      }
+      if (!isValidEmail(email)) {
+        event.preventDefault();
+        showMessage('✧ Veuillez saisir une adresse email valide (ex: nom@domaine.com).', true);
+        emailField.focus();
+        return false;
+      }
+      if (!password) {
+        event.preventDefault();
+        showMessage('✧ Veuillez créer un mot de passe.', true);
+        passwordField.focus();
+        return false;
+      }
+      if (password.length < 6) {
+        event.preventDefault();
+        showMessage('✧ Le mot de passe doit contenir au moins 6 caractères.', true);
+        passwordField.focus();
+        return false;
+      }
+      if (password !== confirm) {
+        event.preventDefault();
+        showMessage('✧ Les mots de passe ne correspondent pas. Veuillez réessayer.', true);
+        confirmField.focus();
+        return false;
+      }
+      if (!termsCheckbox.checked) {
+        event.preventDefault();
+        showMessage('✧ Veuillez accepter les Conditions et la Politique de confidentialité pour continuer.', true);
+        termsCheckbox.focus();
+        return false;
+      }
+      
+      // Stocker les données utilisateur dans localStorage pour la persistance (démo)
+      storeUserData(email, fullname);
+      
+      // Message de succès avant redirection
+      const firstName = fullname.split(' ')[0];
+      showMessage(`🎉 Bienvenue sur ToDoTn, ${firstName} ! Redirection vers votre tableau Scrum...`, false);
+      
+      // Redirection après un court délai pour afficher le toast
+      setTimeout(() => {
+        signupForm.removeEventListener('submit', validateAndSubmit);
+        signupForm.submit();
+      }, 500);
+      
+      return false;
+    }
+
+    // Attacher le gestionnaire de validation
+    signupForm.addEventListener('submit', validateAndSubmit);
+    
+    // Inscription via Google (simulation)
+    function handleGoogleSignup() {
+      showMessage('🔐 Démo Google OAuth — création de votre compte...', false);
+      setTimeout(() => {
+        const demoEmail = 'google_user@todotn.com';
+        storeUserData(demoEmail, 'Google User');
+        window.location.href = 'index.html';
+      }, 800);
+    }
+    
+    // Inscription via GitHub (simulation)
+    function handleGithubSignup() {
+      showMessage('🐙 Démo GitHub — configuration de votre espace de travail...', false);
+      setTimeout(() => {
+        const demoEmail = 'github_user@todotn.com';
+        storeUserData(demoEmail, 'GitHub User');
+        window.location.href = 'index.html';
+      }, 800);
+    }
+    
+    // Redirection vers la page de connexion
+    function handleSigninRedirect() {
+      showMessage('🔐 Redirection vers la page de connexion...', false);
+      setTimeout(() => {
+        window.location.href = 'signin.html';
+      }, 400);
+    }
+    
+    // Conditions & Confidentialité (simulation)
+    function handleTerms(e) {
+      e.preventDefault();
+      showMessage('📜 Conditions d\'utilisation de ToDoTn : Productivité agile, utilisation équitable et confidentialité des données. (Démo)', false);
+    }
+    function handlePrivacy(e) {
+      e.preventDefault();
+      showMessage('🔒 Politique de confidentialité : Vos données sont chiffrées et jamais partagées. (Démo)', false);
+    }
+    
+    googleBtn.addEventListener('click', handleGoogleSignup);
+    githubBtn.addEventListener('click', handleGithubSignup);
+    signinRedirect.addEventListener('click', handleSigninRedirect);
+    termsLink.addEventListener('click', handleTerms);
+    privacyLink.addEventListener('click', handlePrivacy);
+    
+    // Pré-remplir depuis localStorage si un utilisateur est connecté ? (optionnel)
+    const currentUser = localStorage.getItem('todotn_current_user');
+    if (currentUser && window.location.search.includes('refill')) {
+      emailField.value = currentUser;
+    }
+    
+    emailField.placeholder = "demo@todotn.com ou votre email";
+    
+    // Styles additionnels
+    const style = document.createElement('style');
+    style.textContent = `
+      .submit-btn:active { transform: scale(0.97); transition: transform 0.05s; }
+      .todotn-toast { animation: slideUpFade 0.2s ease-out; }
+      @keyframes slideUpFade {
+        from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+      }
+      .signin-link, .terms-link {
+        transition: all 0.2s;
+      }
+    `;
+    document.head.appendChild(style);
+  })();
+</script>
+</body>
+</html>

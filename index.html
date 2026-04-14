@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ToDoTn — Tableau Scrum</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --surface2: #f1f5f9;
+    --surface3: #e2e8f0;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.12);
+    --accent: #0f172a;
+    --accent2: #3b82f6;
+    --accent3: #f59e0b;
+    --text: #0f172a;
+    --text2: #475569;
+    --text3: #94a3b8;
+    --purple: #8b5cf6;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --green: #10b981;
+    --radius: 10px;
+    --radius-lg: 18px;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -1px rgb(0 0 0 / 0.03);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Instrument Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* === BARRE DE NAVIGATION MODERNE === */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .logo-area:hover {
+    opacity: 0.8;
+  }
+  .logo-main {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: var(--text);
+  }
+  .logo-accent {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+  .nav-item {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text2);
+    transition: color 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+  .nav-item:hover {
+    color: var(--accent2);
+  }
+  .nav-item.active {
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  /* === BARRE DE VÉLOCITÉ === */
+  .velocity-track {
+    height: 3px;
+    background: var(--surface3);
+    width: 100%;
+  }
+  .velocity-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--purple));
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  }
+
+  /* === MÉTRIQUES === */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .metric {
+    background: var(--surface);
+    padding: 1.4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .metric-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .metric-val.accent {
+    color: var(--accent2);
+  }
+  .metric-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* === CONTENEUR PRINCIPAL === */
+  .main {
+    padding: 2rem 2rem 2.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* === FORMULAIRE D'AJOUT === */
+  .add-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+  }
+  .add-form:focus-within {
+    box-shadow: var(--shadow-md);
+  }
+  .add-form input[type=text] {
+    flex: 2;
+    min-width: 200px;
+    height: 44px;
+    padding: 0 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .add-form input[type=text]:focus {
+    border-color: var(--accent2);
+    outline: none;
+    background: white;
+  }
+  .add-form select {
+    height: 44px;
+    padding: 0 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text2);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-add {
+    height: 44px;
+    padding: 0 28px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-add:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* === TABLEAU DES COLONNES === */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 2rem;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .col-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 6px;
+  }
+  .col-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .ct-todo { color: var(--blue); }
+  .ct-progress { color: var(--accent3); }
+  .ct-done { color: var(--green); }
+
+  .col-cnt {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 40px;
+    background: var(--surface2);
+    color: var(--text2);
+  }
+
+  .col-body {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+  }
+  .col-body.drag-target {
+    border-color: var(--accent2);
+    background: rgba(59,130,246,0.02);
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.1);
+  }
+
+  /* === CARTE MODERNE === */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: grab;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .card:hover {
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  .card:active { cursor: grabbing; }
+  .card.dragging {
+    opacity: 0.35;
+    cursor: grabbing;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .type-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 30px;
+    white-space: nowrap;
+    font-family: 'Syne', sans-serif;
+    background: var(--surface2);
+    color: var(--text2);
+  }
+  .tb-feature { background: #ede9fe; color: #6d28d9; }
+  .tb-bug { background: #fee2e2; color: #b91c1c; }
+  .tb-tache { background: #dbeafe; color: #1e40af; }
+  .tb-amelio { background: #dcfce7; color: #166534; }
+
+  .card-text {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+  .sp-pill {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 40px;
+    background: var(--surface2);
+    color: var(--text2);
+  }
+
+  .card-btns {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .card:hover .card-btns {
+    opacity: 1;
+  }
+  .cbtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cbtn:hover {
+    background: var(--surface3);
+    color: var(--text);
+  }
+  .cbtn.del:hover {
+    background: #fee2e2;
+    color: var(--red);
+  }
+  .cbtn.fwd { color: var(--blue); }
+  .cbtn.back { color: var(--text3); }
+
+  .empty-col {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--text3);
+    padding: 2rem;
+    text-align: center;
+    background: var(--surface2);
+    border-radius: 12px;
+  }
+
+  /* === BARRE D'ACTIONS === */
+  .actions-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  .action-btn {
+    height: 40px;
+    padding: 0 20px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 40px;
+    color: var(--text2);
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Instrument Sans', sans-serif;
+  }
+  .action-btn:hover {
+    background: var(--surface2);
+    border-color: var(--border2);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+  .action-btn.primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+  }
+  .action-btn.primary:hover {
+    background: #1e293b;
+  }
+
+  /* responsive */
+  @media (max-width: 850px) {
+    .board { grid-template-columns: repeat(2, 1fr); }
+    .metrics-row { grid-template-columns: repeat(2, 1fr); }
+    .navbar { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 600px) {
+    .board { grid-template-columns: 1fr; }
+    .main { padding: 1.5rem; }
+    .add-form { flex-direction: column; }
+  }
+
+  /* Infos utilisateur & déconnexion */
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface2);
+    padding: 5px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+  }
+  .user-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .logout-btn {
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: var(--text3);
+    cursor: pointer;
+    font-family: inherit;
+    padding: 4px 8px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover {
+    background: var(--surface3);
+    color: var(--red);
+  }
+</style>
+</head>
+<body>
+
+<!-- Barre de navigation moderne (sans sélecteur de sprint) -->
+<nav class="navbar">
+  <div class="logo-area" id="logoHome">
+    <span class="logo-main">ToDo</span><span class="logo-accent">Tn</span>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <!-- Contenu dynamique injecté via JS selon l'état d'authentification -->
+  </div>
+</nav>
+
+<!-- barre de vélocité -->
+<div class="velocity-track"><div class="velocity-fill" id="vel-fill" style="width:0%"></div></div>
+
+<!-- métriques -->
+<div class="metrics-row">
+  <div class="metric">
+    <div class="metric-val" id="m-stories">0</div>
+    <div class="metric-label">Total stories</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val" id="m-sp">0</div>
+    <div class="metric-label">Points actifs</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val accent" id="m-done">0</div>
+    <div class="metric-label">Points livrés</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val accent" id="m-pct">0%</div>
+    <div class="metric-label">Vélocité sprint</div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- FORMULAIRE D'AJOUT -->
+  <div class="add-form">
+    <input type="text" id="story-input" placeholder="Créer une user story..." />
+    <select id="type-sel">
+      <option value="feature">Fonctionnalité</option>
+      <option value="bug">Bug</option>
+      <option value="tache">Tâche</option>
+      <option value="amelio">Amélioration</option>
+    </select>
+    <select id="sp-sel">
+      <option value="1">1 pt</option>
+      <option value="2">2 pts</option>
+      <option value="3" selected>3 pts</option>
+      <option value="5">5 pts</option>
+      <option value="8">8 pts</option>
+      <option value="13">13 pts</option>
+    </select>
+    <select id="col-sel">
+      <option value="todo">À faire</option>
+      <option value="inprogress">En cours</option>
+      <option value="done">Terminé</option>
+    </select>
+    <button class="btn-add" id="add-btn">+ Ajouter</button>
+  </div>
+
+  <!-- TABLEAU 3 COLONNES -->
+  <div class="board">
+    <!-- COLONNE À FAIRE -->
+    <div class="col">
+      <div class="col-header">
+        <span class="col-title ct-todo">📋 À faire</span>
+        <span class="col-cnt" id="cnt-todo">0</span>
+      </div>
+      <div class="col-body" id="col-todo"></div>
+    </div>
+
+    <!-- COLONNE EN COURS -->
+    <div class="col">
+      <div class="col-header">
+        <span class="col-title ct-progress">⚡ En cours</span>
+        <span class="col-cnt" id="cnt-inprogress">0</span>
+      </div>
+      <div class="col-body" id="col-inprogress"></div>
+    </div>
+
+    <!-- COLONNE TERMINÉ -->
+    <div class="col">
+      <div class="col-header">
+        <span class="col-title ct-done">✅ Terminé</span>
+        <span class="col-cnt" id="cnt-done">0</span>
+      </div>
+      <div class="col-body" id="col-done"></div>
+    </div>
+  </div>
+
+  <div class="actions-bar">
+    <button class="action-btn primary" id="btn-sprint-start">▶ Démarrer sprint (3 depuis À faire)</button>
+    <button class="action-btn" id="btn-sprint-close">🔁 Clôturer sprint & remettre</button>
+    <button class="action-btn" id="btn-archive">🗑 Archiver les terminées</button>
+    <button class="action-btn" id="btn-clear-all">⟳ Tout effacer</button>
+  </div>
+</div>
+
+<script>
+  // Gestion de l'état d'authentification
+  let currentUser = null;
+  
+  // Vérifier si l'utilisateur est connecté via localStorage
+  function checkAuthState() {
+    const userEmail = localStorage.getItem('todotn_current_user');
+    const userName = localStorage.getItem('todotn_user_name');
+    if (userEmail && userName) {
+      currentUser = { email: userEmail, name: userName };
+    } else {
+      currentUser = null;
+    }
+    updateNavbar();
+    return currentUser !== null;
+  }
+  
+  // Mettre à jour la barre de navigation selon l'état d'authentification
+  function updateNavbar() {
+    const navLinks = document.getElementById('navLinks');
+    if (!navLinks) return;
+    
+    if (currentUser) {
+      // Connecté : afficher le nom d'utilisateur et bouton déconnexion
+      navLinks.innerHTML = `
+        <div class="user-info">
+          <span class="user-name">👋 ${escapeHtml(currentUser.name.split(' ')[0])}</span>
+          <button class="logout-btn" id="logoutBtn">Se déconnecter</button>
+        </div>
+      `;
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+      }
+    } else {
+      // Non connecté : afficher les liens de connexion et d'inscription
+      navLinks.innerHTML = `
+        <button class="nav-item" id="navSignIn">se connecter</button>
+        <button class="nav-item" id="navSignUp">s'inscrire</button>
+      `;
+      const signInBtn = document.getElementById('navSignIn');
+      const signUpBtn = document.getElementById('navSignUp');
+      if (signInBtn) signInBtn.addEventListener('click', () => redirectToSignIn());
+      if (signUpBtn) signUpBtn.addEventListener('click', () => redirectToSignUp());
+    }
+  }
+  
+  // Redirections
+  function redirectToSignIn() {
+    window.location.href = 'signin.html';
+  }
+  
+  function redirectToSignUp() {
+    window.location.href = 'signup.html';
+  }
+  
+  function handleLogout() {
+    localStorage.removeItem('todotn_current_user');
+    localStorage.removeItem('todotn_user_name');
+    localStorage.removeItem('todotn_remember');
+    currentUser = null;
+    updateNavbar();
+    showToast('👋 Vous êtes déconnecté', false);
+  }
+  
+  // Notification toast
+  function showToast(message, isError = false) {
+    const existingToast = document.querySelector('.todotn-toast');
+    if (existingToast) existingToast.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = 'todotn-toast';
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '24px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.backgroundColor = isError ? '#fef2f2' : '#f0fdf4';
+    toast.style.color = isError ? '#b91c1c' : '#065f46';
+    toast.style.border = `1px solid ${isError ? '#fecaca' : '#c8f060'}`;
+    toast.style.padding = '12px 28px';
+    toast.style.borderRadius = '60px';
+    toast.style.fontSize = '0.85rem';
+    toast.style.fontWeight = '500';
+    toast.style.fontFamily = "'Instrument Sans', sans-serif";
+    toast.style.boxShadow = '0 10px 25px -5px rgba(0,0,0,0.1)';
+    toast.style.backdropFilter = 'blur(4px)';
+    toast.style.background = isError ? '#fff5f5' : '#fefce8';
+    toast.style.zIndex = '1000';
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.25s';
+      setTimeout(() => toast.remove(), 300);
+    }, 2800);
+  }
+  
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+  
+  // ========== LOGIQUE DU TABLEAU SCRUM ==========
+  const COLS = ['todo', 'inprogress', 'done'];
+  const TYPE_LABELS = { feature:'Fonctionnalité', bug:'Bug', tache:'Tâche', amelio:'Amélioration' };
+  
+  // Charger les stories depuis localStorage ou utiliser les valeurs par défaut
+  let stories = [];
+  let nextId = 8;
+  let dragId = null;
+  
+  function loadStories() {
+    const saved = localStorage.getItem('todotn_stories');
+    if (saved) {
+      stories = JSON.parse(saved);
+      nextId = Math.max(...stories.map(s => s.id), 0) + 1;
+    } else {
+      stories = [
+        { id: 1, text: 'En tant qu\'utilisateur, je veux m\'inscrire avec un email', type: 'feature', sp: 5, col: 'todo' },
+        { id: 2, text: 'Corriger le bug d\'affichage responsive sur tablette', type: 'bug', sp: 3, col: 'inprogress' },
+        { id: 3, text: 'Implémenter la recherche par mots-clés', type: 'feature', sp: 8, col: 'todo' },
+        { id: 4, text: 'Refactoriser le module d\'authentification', type: 'tache', sp: 2, col: 'done' },
+        { id: 5, text: 'Optimiser le cache API', type: 'amelio', sp: 5, col: 'todo' },
+        { id: 6, text: 'Ajouter les notifications push', type: 'feature', sp: 13, col: 'inprogress' },
+        { id: 7, text: 'Mettre à jour les dépendances npm', type: 'tache', sp: 1, col: 'done' },
+      ];
+      nextId = 8;
+    }
+  }
+  
+  function saveStories() {
+    localStorage.setItem('todotn_stories', JSON.stringify(stories));
+  }
+  
+  function computeMetrics() {
+    const totalStories = stories.length;
+    const activeSP = stories.filter(s => s.col !== 'done').reduce((sum, s) => sum + s.sp, 0);
+    const doneSP = stories.filter(s => s.col === 'done').reduce((sum, s) => sum + s.sp, 0);
+    const pct = activeSP + doneSP > 0 ? Math.round((doneSP / (activeSP + doneSP)) * 100) : 0;
+    return { totalStories, activeSP, doneSP, pct };
+  }
+  
+  function render() {
+    const { totalStories, activeSP, doneSP, pct } = computeMetrics();
+    document.getElementById('m-stories').textContent = totalStories;
+    document.getElementById('m-sp').textContent = activeSP;
+    document.getElementById('m-done').textContent = doneSP;
+    document.getElementById('m-pct').textContent = pct + '%';
+    document.getElementById('vel-fill').style.width = pct + '%';
+    
+    COLS.forEach(col => {
+      const items = stories.filter(s => s.col === col);
+      const countSpan = document.getElementById(`cnt-${col === 'inprogress' ? 'inprogress' : col}`);
+      if (countSpan) countSpan.textContent = items.length;
+      const bodyEl = document.getElementById(`col-${col === 'inprogress' ? 'inprogress' : col}`);
+      if (!bodyEl) return;
+      const colIdx = COLS.indexOf(col);
+      
+      if (!items.length) {
+        bodyEl.innerHTML = '<div class="empty-col">✨ Déposez une story ici</div>';
+      } else {
+        bodyEl.innerHTML = items.map(s => {
+          const canMoveLeft = colIdx > 0;
+          const canMoveRight = colIdx < COLS.length - 1;
+          return `<div class="card" draggable="true" data-id="${s.id}">
+            <div class="card-top">
+              <span class="type-badge tb-${s.type}">${TYPE_LABELS[s.type]}</span>
+              <span class="card-text">${escapeHtml(s.text)}</span>
+            </div>
+            <div class="card-footer">
+              <span class="sp-pill">${s.sp} pt${s.sp > 1 ? 's' : ''}</span>
+              <div class="card-btns">
+                ${canMoveLeft ? `<button class="cbtn back" data-id="${s.id}" data-d="-1">←</button>` : ''}
+                ${canMoveRight ? `<button class="cbtn fwd" data-id="${s.id}" data-d="1">→</button>` : ''}
+                <button class="cbtn del" data-id="${s.id}" data-action="del">✕</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+      
+      const cards = bodyEl.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.setAttribute('draggable', 'true');
+        card.addEventListener('dragstart', (e) => {
+          dragId = parseInt(card.dataset.id);
+          setTimeout(() => card.classList.add('dragging'), 0);
+        });
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+          dragId = null;
+          document.querySelectorAll('.col-body').forEach(b => b.classList.remove('drag-target'));
+        });
+      });
+      
+      bodyEl.querySelectorAll('[data-d]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const storyId = parseInt(btn.dataset.id);
+          const delta = parseInt(btn.dataset.d);
+          const story = stories.find(s => s.id === storyId);
+          if (story) {
+            const currentIdx = COLS.indexOf(story.col);
+            const newIdx = currentIdx + delta;
+            if (newIdx >= 0 && newIdx < COLS.length) {
+              story.col = COLS[newIdx];
+              saveStories();
+              render();
+            }
+          }
+        });
+      });
+      
+      bodyEl.querySelectorAll('[data-action="del"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const storyId = parseInt(btn.dataset.id);
+          stories = stories.filter(s => s.id !== storyId);
+          saveStories();
+          render();
+        });
+      });
+      
+      bodyEl.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        bodyEl.classList.add('drag-target');
+      });
+      bodyEl.addEventListener('dragleave', () => {
+        bodyEl.classList.remove('drag-target');
+      });
+      bodyEl.addEventListener('drop', (e) => {
+        e.preventDefault();
+        bodyEl.classList.remove('drag-target');
+        if (dragId !== null) {
+          const draggedStory = stories.find(s => s.id === dragId);
+          if (draggedStory && draggedStory.col !== col) {
+            draggedStory.col = col;
+            saveStories();
+            render();
+          }
+        }
+        dragId = null;
+      });
+    });
+  }
+  
+  // Gestionnaires d'événements pour les actions du tableau
+  document.getElementById('add-btn').addEventListener('click', () => {
+    const input = document.getElementById('story-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const targetCol = document.getElementById('col-sel').value;
+    if (!COLS.includes(targetCol)) return;
+    stories.push({
+      id: nextId++,
+      text: text,
+      type: document.getElementById('type-sel').value,
+      sp: parseInt(document.getElementById('sp-sel').value),
+      col: targetCol,
+    });
+    saveStories();
+    input.value = '';
+    render();
+  });
+  
+  document.getElementById('story-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('add-btn').click();
+  });
+  
+  document.getElementById('btn-sprint-start').addEventListener('click', () => {
+    const todoItems = stories.filter(s => s.col === 'todo');
+    const toMove = todoItems.slice(0, 3);
+    toMove.forEach(item => { item.col = 'inprogress'; });
+    if (toMove.length === 0) showToast('Aucune story dans "À faire" à démarrer', true);
+    saveStories();
+    render();
+  });
+  
+  document.getElementById('btn-sprint-close').addEventListener('click', () => {
+    const inProgressStories = stories.filter(s => s.col === 'inprogress');
+    inProgressStories.forEach(s => { s.col = 'todo'; });
+    saveStories();
+    render();
+  });
+  
+  document.getElementById('btn-archive').addEventListener('click', () => {
+    stories = stories.filter(s => s.col !== 'done');
+    saveStories();
+    render();
+  });
+  
+  document.getElementById('btn-clear-all').addEventListener('click', () => {
+    if (confirm('Supprimer toutes les stories ? Cette action est irréversible.')) {
+      stories = [];
+      saveStories();
+      render();
+    }
+  });
+  
+  document.getElementById('logoHome').addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+  
+  // Initialisation de l'application
+  loadStories();
+  checkAuthState();
+  render();
+</script>
+</body>
+</html>
